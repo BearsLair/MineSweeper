@@ -8,10 +8,10 @@ class Cell {
   }
 }
 
-let gameBoard = [];
-
 // Initialize the game board with 100 cells
 function initializeGameBoard() {
+  let gameBoard = [];
+
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 10; j++) {
       let id = `${j},${i}`;
@@ -19,6 +19,8 @@ function initializeGameBoard() {
       gameBoard.push(cell);
     }
   }
+
+  return gameBoard;
 }
 
 // Randomize the bomb positions on the game board
@@ -62,4 +64,4 @@ function calculateSurroundingBombs() {
   }
 }
 
-export { Cell, initializeGameBoard, calculateSurroundingBombs };
+export default initializeGameBoard;
