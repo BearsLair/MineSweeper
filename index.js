@@ -21,7 +21,24 @@ const createBoard = (widthAndHeight) => {
 };
 
 // Create a function to calculate the number of surrounding bombs around a cell
-const calculateSurroundingBombs = () => {};
+const calculateSurroundingBombs = (board, cell) => {
+  let count = 0;
+  const row = parseInt(cell.id.split(",")[0], 10);
+  const col = parseInt(cell.id.split(",")[1], 10);
+
+  // Check adjacent cells
+  for (let i = row - 1; i <= row + 1; i++) {
+    for (let j = col - 1; j <= col + 1; j++) {
+      // Check bounds
+      if (i >= 0 && i < board.length && j >= 0 && j < board[i].length) {
+        const cellId = `${j},${i}`;
+        count += board[cellId].bombPresent ? 1 : 0;
+      }
+    }
+  }
+
+  return count;
+};
 
 // Add bombs to the gameboard placed randomly with amount of bombs dynamic
 
