@@ -1,9 +1,11 @@
 class Cell {
-  constructor() {
+  constructor(row, col) {
     this.cellClickedOn = false;
     this.bombPresent = false;
     this.surroundingBombs = 0;
     this.flagged = false;
+    this.row = row;
+    this.col = col;
   }
 }
 
@@ -12,7 +14,7 @@ const createBoard = (widthAndHeight) => {
   let board = {};
   for (let i = 0; i < widthAndHeight; i++) {
     for (let j = 0; j < widthAndHeight; j++) {
-      let id = `${j},${i}`;
+      const id = `${j},${i}`;
       let cell = new Cell(j, i);
       board[id] = cell;
     }
@@ -23,16 +25,28 @@ const createBoard = (widthAndHeight) => {
 // Create a function to calculate the number of surrounding bombs around a cell
 const calculateSurroundingBombs = (board, cell) => {
   let count = 0;
-  const row = parseInt(cell.id.split(",")[0], 10);
-  const col = parseInt(cell.id.split(",")[1], 10);
 
   // Check adjacent cells
-  for (let i = row - 1; i <= row + 1; i++) {
-    for (let j = col - 1; j <= col + 1; j++) {
-      // Check bounds
-      if (i >= 0 && i < board.length && j >= 0 && j < board[i].length) {
-        const cellId = `${j},${i}`;
-        count += board[cellId].bombPresent ? 1 : 0;
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      const newRow = cell.row + i;
+      const newCol = cell.col + j;
+
+      if (
+        newRow >= 0 &&
+        newRow < board.length &&
+        newCol >= 0 &&
+        newCol < board[newRow].length
+      ) {
+        try {
+          const neighborId = `${newCol},${newRow}`;
+          count += board[neighborId].bombPresent ? 1 : 0;
+        } catch (error) {
+          console.error(
+            `Error calculating surrounding bombs for cell ${cell.id}:`,
+            error,
+          );
+        }
       }
     }
   }
@@ -44,7 +58,4 @@ const calculateSurroundingBombs = (board, cell) => {
 
 // Add the board to the browser and display it as a grid with clickable cells
 
-const newBoard = createBoard(3, 3);
-console.log(newBoard);
-
-export default createBoard;
+export { createBoard, calculateSurroundingBombs };
