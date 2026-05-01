@@ -85,4 +85,4 @@ class GameBoard {
 
 // TODO: Add the board to the browser and display it as a grid with clickable cells
 
-export { createBoard, calculateSurroundingBombs, addBombs };
+export default GameBoard;

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { calculateSurroundingBombs, addBombs } from "./index.js";
+import GameBoard from "./index.js";
 
 // A 3 X 3 gameboard has 9 cells
 describe("3 x 3 Game Board has 9 cells", () => {
