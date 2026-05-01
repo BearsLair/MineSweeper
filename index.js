@@ -1,3 +1,5 @@
+import { CLIENT_RENEG_LIMIT } from "node:tls";
+
 class Cell {
   constructor(row, col) {
     this.cellClickedOn = false;
@@ -23,24 +25,32 @@ const createBoard = (widthAndHeight) => {
 };
 
 // Create a function to calculate the number of surrounding bombs around a cell
-const calculateSurroundingBombs = (board, cell) => {
+const calculateSurroundingBombs = (board, widthAndHeight, cellId) => {
+  const visited = [];
   let count = 0;
 
   // Check adjacent cells
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
-      const newRow = cell.row + i;
-      const newCol = cell.col + j;
+      let newRow = board[cellId].row + i;
+      let newCol = board[cellId].col + j;
 
+      // Skip out of bounds or visited cells
       if (
         newRow >= 0 &&
-        newRow < board.length &&
+        newRow < widthAndHeight &&
         newCol >= 0 &&
-        newCol < board[newRow].length
+        newCol < widthAndHeight &&
+        !visited.includes(`${newCol},${newRow}`)
       ) {
         try {
+          // Check if the neighbor has a bomb and mark it as visited
+
           const neighborId = `${newCol},${newRow}`;
-          count += board[neighborId].bombPresent ? 1 : 0;
+          if (board[neighborId].bombPresent) {
+            count += 1;
+          }
+          visited.push(neighborId);
         } catch (error) {
           console.error(
             `Error calculating surrounding bombs for cell ${cell.id}:`,
@@ -55,7 +65,21 @@ const calculateSurroundingBombs = (board, cell) => {
 };
 
 // Add bombs to the gameboard placed randomly with amount of bombs dynamic
+const addBombs = (board, bombAmountToPlace) => {
+  const totalCells = Object.keys(board).length;
+  let bombCount = 0;
+
+  while (bombCount < bombAmountToPlace) {
+    let keyIndex = Math.floor(Math.random() * totalCells);
+    let currentCellId = totalCells[keyIndex];
+
+    if (!board[currentCellId].bombPresent) {
+      board[currentCellId].bombPresent = true;
+      bombCount++;
+    }
+  }
+};
 
 // Add the board to the browser and display it as a grid with clickable cells
 
-export { createBoard, calculateSurroundingBombs };
+export { createBoard, calculateSurroundingBombs, addBombs };

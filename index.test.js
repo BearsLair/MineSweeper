@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { createBoard, calculateSurroundingBombs } from "./index.js";
+import { createBoard, calculateSurroundingBombs, addBombs } from "./index.js";
 
 // A 3 X 3 gameboard has 9 cells
 describe("3 x 3 Game Board has 9 cells", () => {
@@ -37,27 +37,32 @@ describe("Each cell has the correct properties on 10 x 10 board", () => {
 
 // Create a 3 x 3 board and place a bomb on the top-right cell. The calculateSurroundingBombs function should correctly count the number of surrounding bombs for that cell.
 describe("calculateSurroundingBombs should calculate the correct number of surrounding bombs for a cell", () => {
-  it("count should be 1", () => {
-    const board = createBoard(3, 3);
-    board["0,2"].bombIsPresent = true;
+  it("Count should be 3", () => {
+    const board = createBoard(3);
+    board["0,2"].bombPresent = true;
+    board["2,2"].bombPresent = true;
+    board["0,0"].bombPresent = true;
 
-    const count = calculateSurroundingBombs(board, "1,1");
-    assert.ok(count, 1);
+    const count = calculateSurroundingBombs(board, 3, "1,1");
+
+    assert.ok(count, 3);
   });
 });
 
-// describe("calculateSurroundingBombs", () => {
-//   it("should correctly count the surrounding bombs for a cell in a 3x3 grid", () => {
-//     // Create a 3x3 game board
-//     const board = initializeGameBoard(3, 3);
+// Create 10 x 10 board and place 15 bombs on the board. Verify that there are 15 bombs present on the board.
+describe("addBombs should add the correct number of bombs to the board", () => {
+  it("There should be 15 bombs on the board", () => {
+    const board = createBoard(10);
+    const newBoard = addBombs(board, 15);
 
-//     // Place bomb on top-right cell
-//     board[2].bombIsPresent();
-//     board[5].calculateSurroundingBombs(3, 3);
+    let bombCount = 0;
 
-//     const evaluation = board[5].surroundingBombs === 1;
+    const cellKeys = Object.keys(newBoard);
 
-//     // Assert
-//     assert.ok(evaluation, "The surrounding bombs should be 1");
-//   });
-// });
+    for (const cellId in cellKeys) {
+      board[cellId].bombPresent && bombCount++;
+    }
+
+    assert.ok(bombCount, 15);
+  });
+});
