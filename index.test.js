@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { createBoard, calculateSurroundingBombs, addBombs } from "./index.js";
+import { calculateSurroundingBombs, addBombs } from "./index.js";
 
 // A 3 X 3 gameboard has 9 cells
 describe("3 x 3 Game Board has 9 cells", () => {
@@ -59,9 +59,8 @@ describe("addBombs should add the correct number of bombs to the board", () => {
     let bombCount = 0;
 
     const cellKeys = Object.keys(newBoard);
-
-    for (const cellId in cellKeys) {
-      board[newBoard].bombPresent && bombCount++;
+    for (const cellId of cellKeys) {
+      newBoard[cellId].bombPresent && bombCount++;
     }
 
     assert.ok(bombCount, 15);
