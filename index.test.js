@@ -53,6 +53,7 @@ describe("calculateSurroundingBombs should calculate the correct number of surro
 describe("addBombs should add the correct number of bombs to the board", () => {
   it("There should be 15 bombs on the board", () => {
     const board = createBoard(10);
+
     const newBoard = addBombs(board, 15);
 
     let bombCount = 0;
@@ -60,7 +61,7 @@ describe("addBombs should add the correct number of bombs to the board", () => {
     const cellKeys = Object.keys(newBoard);
 
     for (const cellId in cellKeys) {
-      board[cellId].bombPresent && bombCount++;
+      board[newBoard].bombPresent && bombCount++;
     }
 
     assert.ok(bombCount, 15);
